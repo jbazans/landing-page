@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="utf-8">
 	<title>Landing Page</title>
 	<link rel="icon" type="image/png" href="assets/img/icon.png">
 	<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
@@ -119,15 +120,21 @@
 					<h2 style="margin-bottom: 10px;">Envia tu consulta ahora!</h2>
 					<form>
 						<label>Nombre</label>
-						<input type="text" name="nombre" placeholder="Nombre">
+						<input type="text" id="nombre" placeholder="Nombre">
 						<br>
 						<label>DNI</label>
-						<input type="text" name="dni" placeholder="DNI">
+						<input type="number" id="dni" placeholder="DNI">
+						<br>
+						<label>Correo</label>
+						<input type="text" id="correo" placeholder="Correo">
+						<br>
+						<label>Celular</label>
+						<input type="number" id="celular" placeholder="Celular">
 						<br>
 						<label>Consulta</label>
-						<textarea name="consulta"></textarea>
+						<textarea id="consulta"></textarea>
 						<br>
-						<button>Enviar mensaje</button>
+						<button onclick="send_mensaje()">Enviar mensaje</button>
 					</form>
 				</div>
 			</div>
@@ -136,5 +143,36 @@
 	<footer>
 		<center><p>Punto y Coma - Tutoriales | 2019</p></center>
 	</footer>
+	<script type="text/javascript">
+		function send_mensaje(){
+			if (document.getElementById("nombre").value=="" ||
+				document.getElementById("dni").value=="" ||
+				document.getElementById("correo").value==""||
+				document.getElementById("celular").value==""||
+				document.getElementById("consulta").value=="") {
+				alert("Debe completar sus datos");
+				return;
+			}
+			var fd=new FormData();
+			fd.append('nombre',document.getElementById("nombre").value);
+			fd.append('correo',document.getElementById("correo").value);
+			fd.append('celular',document.getElementById("celular").value);
+			fd.append('dni',document.getElementById("dni").value);
+			fd.append('consulta',document.getElementById("consulta").value);
+			var request=new XMLHttpRequest();
+			request.open('POST','api/api_save_mensaje.php');
+			request.onload=function (){
+				console.log(request);
+				if (request.readyState==4 && request.status==200) {
+					if (request.responseText=="1") {
+						alert("Se envió el mensaje correctamente");
+					}else{
+						alert("Hubo un error, intente más tarde");
+					}
+				}
+			}
+			request.send(fd);
+		}
+	</script>
 </body>
 </html>
